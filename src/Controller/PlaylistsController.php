@@ -45,11 +45,12 @@ class PlaylistsController extends AbstractController {
     }
     
     /**
+     * Création de la route vers la page des playlists
      * @Route("/playlists", name="playlists")
      * @return Response
      */
     public function index(): Response{
-        $playlists = $this->playlistRepository->findAllOrderBy('name', 'ASC');
+        $playlists = $this->playlistRepository->findAllOrderByName('ASC');
         $categories = $this->categorieRepository->findAll();
         return $this->render(PLAYLIST_CHEMIN, [
             'playlists' => $playlists,
@@ -58,19 +59,28 @@ class PlaylistsController extends AbstractController {
     }
 
     /**
+     * Tri les enregistrements selon le $champ "name" et l'ordre
+     * Ou selon le $champ "nbformations" et l'ordre
      * @Route("/playlists/tri/{champ}/{ordre}", name="playlists.sort")
      * @param type $champ
      * @param type $ordre
      * @return Response
      */
     public function sort($champ, $ordre): Response{
-        $playlists = $this->playlistRepository->findAllOrderBy($champ, $ordre);
+        switch($champ){
+            case "name":
+                $playlists = $this->playlistRepository->findAllOrderByName($ordre);
+                break;
+            case "nbformations":
+                $playlists = $this->playlistRepository->findAllOrderByNbFormations($ordre);
+                break;
+        }
         $categories = $this->categorieRepository->findAll();
         return $this->render(PLAYLIST_CHEMIN, [
             'playlists' => $playlists,
             'categories' => $categories            
         ]);
-    }         
+    }        
     
     /**
      * @Route("/playlists/recherche/{champ}/{table}", name="playlists.findallcontain")
@@ -100,7 +110,7 @@ class PlaylistsController extends AbstractController {
         $playlist = $this->playlistRepository->find($id);
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
-        return $this->render(PLAYLIST_CHEMIN, [
+        return $this->render('pages/playlist.html.twig', [
             'playlist' => $playlist,
             'playlistcategories' => $playlistCategories,
             'playlistformations' => $playlistFormations
