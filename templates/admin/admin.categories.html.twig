@@ -1,0 +1,49 @@
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+    <tr>  
+        <th class="text-end align-middle" scope="col">
+            <form class="form-inline mt-1" method="POST" action="{{ path('admin.ajouter.categorie') }}">
+                <div class="text-end form-group mr-1 mb-2">
+                    <input type="text" class="sm" name="name">
+                    <input type="hidden" name="_token" value="{{ csrf_token('filtre_name') }}">
+                        <button type="submit" class="btn btn-info mb-2 btn-sm">Ajouter une catégorie</button>
+                </div>
+            </form>
+        </th>
+    </tr>
+    <table class="table table-striped">
+        <caption></caption>
+        <thead>
+            <tr>
+                <th class="text-left align-top" scope="col">
+                    Catégories           
+                </th>
+                
+                <th class="text-left align-top" scope="col">
+                    Nombre de formations<br>
+                </th>
+            </tr>
+        </thead>
+    <tbody>
+        <option value=""></option>
+            {% for k in 0..categories|length-1 %}
+                <tr class="align-middle">
+                    <td>
+                        <h5 class="text-left">
+                            {{ categories[k].name }}
+                        </h5>
+                    </td>
+                    <td class="text-left">
+                        {{ categories[k].formations|length }}
+                    </td>
+                    <td>
+                        {% if categories[k].formations|length == 0 %}
+                            <a href="{{ path('admin.supprimer.categorie', {id:categories[k].id}) }}" class="btn btn-danger" onclick="return confirm('Confirmer la suppression de cette categorie {{categories[k].name}} ?')">Supprimer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+    </tbody>
+                        
+{% endblock %}
