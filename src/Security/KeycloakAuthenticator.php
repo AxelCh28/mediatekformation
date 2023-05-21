@@ -47,7 +47,7 @@ class KeycloakAuthenticator extends OAuth2Authenticator implements Authenticatio
      * @param AuthenticationException $authException
      * @return Response
      */
-    public function start(Request $request, AuthenticationException $authException = null): Response{
+    public function start(Request $request, AuthenticationException $authException = null): Response {
         return new RedirectResponse(
                 '/oauth/login',
                 Response::HTTP_TEMPORARY_REDIRECT
@@ -59,7 +59,7 @@ class KeycloakAuthenticator extends OAuth2Authenticator implements Authenticatio
      * @param Request $request
      * @return bool|null
      */
-    public function supports(Request $request): ?bool{
+    public function supports(Request $request): ?bool {
         return $request->attributes->get('_route') === 'oauth_check';
     }
     
@@ -125,7 +125,7 @@ class KeycloakAuthenticator extends OAuth2Authenticator implements Authenticatio
      * @param string $firewallName
      * @return Response|null
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response{
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response {
         $targetUrl = $this->router->generate('admin.formations');
         return new RedirectResponse($targetUrl);
     }

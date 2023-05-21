@@ -60,10 +60,10 @@ class FormationRepository extends ServiceEntityRepository
      * @param type $table
      * @return Formation[]
      */
-    public function findAllOrderByInTable($champ, $ordre, $table): array{
+    public function findAllOrderByInTable($champ, $ordre, $table=""): array{
         return $this->createQueryBuilder('f')
                 ->join('f.' .$table, 't')
-                ->orderBy('f.'.$champ, $ordre)
+                ->orderBy('t.'.$champ, $ordre)
                 ->getQuery()
                 ->getResult();
     }

@@ -45,7 +45,7 @@ class FormationsController extends AbstractController {
     public function index(): Response{
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render(FORMATIONS_CHEMIN, [
             'formations' => $formations,
             'categories' => $categories
         ]);
@@ -59,7 +59,12 @@ class FormationsController extends AbstractController {
      * @return Response
      */
     public function sort($champ, $ordre, $table=""): Response{
-        $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
+        if($table !=""){
+            $formations = $this->formationRepository->findAllOrderByInTable($champ, $ordre, $table);
+        }else 
+        {
+            $formations = $this->formationRepository->findAllOrderBy($champ, $ordre);
+        }
         $categories = $this->categorieRepository->findAll();
         return $this->render(FORMATIONS_CHEMIN, [
             'formations' => $formations,
@@ -76,7 +81,11 @@ class FormationsController extends AbstractController {
      */
     public function findAllContain($champ, Request $request, $table=""): Response{
         $valeur = $request->get("recherche");
-        $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
+        if ($table != ''){
+            $formations = $this->formationRepository->findByContainValueInTable($champ, $valeur, $table);
+        }else{
+            $formations = $this->formationRepository->findByContainValue($champ, $valeur);
+        }
         $categories = $this->categorieRepository->findAll();
         return $this->render(FORMATIONS_CHEMIN, [
             'formations' => $formations,
@@ -93,7 +102,7 @@ class FormationsController extends AbstractController {
      */
     public function showOne($id): Response{
         $formation = $this->formationRepository->find($id);
-        return $this->render(FORMATIONS_CHEMIN, [
+        return $this->render('pages/formation.html.twig', [
             'formation' => $formation
         ]);        
     }   
